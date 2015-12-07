@@ -3,6 +3,11 @@ docker-metrics
 
 collect and visualize docker metrics
 
+requirements
+------------
+
+visualizer is written in EcmaScript 2015, so it run with only Google Chrome.
+
 setup
 -----
 
