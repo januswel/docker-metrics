@@ -1,0 +1,5 @@
+---
+# hostname
+#  cert: /path/to/cert/for/docker/machine
+#  key: /path/to/key/for/docker/machine
+127.0.0.1:
