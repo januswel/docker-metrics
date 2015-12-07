@@ -1,2 +1,4 @@
 collector/influxdb.yml
 collector/inventory.yml
+collector/nohup.out
+web/contents
