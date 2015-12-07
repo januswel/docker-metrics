@@ -1,0 +1,21 @@
+/*
+ * main.css
+ * */
+
+body {
+    font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
+}
+
+ul {
+    list-style-type: none;
+}
+
+#charts > li {
+    margin: 5em;
+    width: 750px;
+}
+
+.legend > li {
+    margin: 0;
+    text-align: right;
+}
