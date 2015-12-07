@@ -3,8 +3,10 @@ docker-metrics
 
 collect and visualize docker metrics
 
-InfluxDB
---------
+setup
+-----
+
+### InfluxDB
 
 scripts in this repository use InfluxDB as backend.
 
@@ -19,8 +21,7 @@ docker-compose up -d
 ./influxdb.sh
 ```
 
-collector
----------
+### collector
 
 directory "collector" has a docker metrics collector script and its sample files for settings.
 
@@ -52,3 +53,31 @@ then, run a collector.
 ```sh
 clockwork collector.rb
 ```
+
+### visualizer
+
+the "visualizer" directory has htmls, javascripts and csses to show metrics charts.
+
+host these directories and files in the hostname or the IP address of same of your InfluxDB.
+
+### web
+
+you can use docker container to host "visualizer".
+
+```sh
+cd web
+# if your env available docker-compose
+docker-compose up -d
+# otherwise
+# some env need "sudo"
+./web.sh
+```
+
+make a symbolic link to "visualizer".
+
+```sh
+ln -s ../visualizer ./contents
+```
+
+now, setup has all done.
+you can see charts in your machine's address with your web browser.
