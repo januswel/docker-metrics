@@ -3,6 +3,22 @@ docker-metrics
 
 collect and visualize docker metrics
 
+InfluxDB
+--------
+
+scripts in this repository use InfluxDB as backend.
+
+you can set up database in another way, but the directory "influxdb" has some scripts and settings to run InfluxDB container.
+
+```sh
+cd influxdb
+# if your env available docker-compose
+docker-compose up -d
+# otherwise
+# some env need "sudo"
+./influxdb.sh
+```
+
 collector
 ---------
 
