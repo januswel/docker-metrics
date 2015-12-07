@@ -58,7 +58,14 @@ gem install clockwork
 then, run a collector.
 
 ```sh
-clockwork collector.rb
+nohup clockwork collector.rb &
+```
+
+to stop collector, use the "kill" command
+
+```sh
+ps aux | grep collector.rb | grep -v grep
+kill <pid>
 ```
 
 ### visualizer
