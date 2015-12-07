@@ -21,6 +21,13 @@ docker-compose up -d
 ./influxdb.sh
 ```
 
+create a database named "docker".
+
+```sh
+# some env need "sudo"
+docker exec influxdb "influx -execute 'CREATE DATABASE docker'"
+```
+
 ### collector
 
 directory "collector" has a docker metrics collector script and its sample files for settings.
