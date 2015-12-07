@@ -2,7 +2,7 @@ influxdb:
   image: januswel/influxdb
   container_name: influxdb
   volumes:
-    - ./influxdb.conf:/etc/influxdb/influxdb.conf
+    - ${PWD}/influxdb.conf:/etc/influxdb/influxdb.conf
     - /var/lib/influxdb/data
   ports:
     - 8083:8083

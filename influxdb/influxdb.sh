@@ -3,7 +3,7 @@
 docker run	\
 	-d	\
 	--name influxdb	\
-	-v ./influxdb.conf:/etc/influxdb/influxdb.conf	\
+    -v $(pwd)/influxdb.conf:/etc/influxdb/influxdb.conf	\
 	-v /var/lib/influxdb/data	\
 	-p 8083:8083	\
 	-p 8086:8086	\
