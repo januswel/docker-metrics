@@ -10,7 +10,7 @@
         return (Array(digit + 1).join('0') + number).substr(-digit);
     }
 
-    const options = {
+    const optionsTemplate = {
         // global options
         animation: true,
         animationSteps: 60,
@@ -24,7 +24,7 @@
         scaleLineColor: 'rgb(0, 0, 0 .1)',
         scaleLineWidth: 1,
         scaleShowLabels: true,
-        scaleLabel : '<%=value%> bytes',
+        scaleLabel : '<%=value%>',
         scaleIntegersOnly: true,
         scaleBeginAtZero: false,
         scaleFontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
@@ -124,7 +124,7 @@
         },
     ];
 
-    let generateChartData = function (raws) {
+    let generateNetworkChartData = function (raws) {
         let result = {
             labels: convertTimeToLabel(raws[0].values).slice(1),
             datasets: [],
@@ -135,6 +135,27 @@
             console.log(raw);
             let dataset = Object.assign({}, colors[i]);
             dataset.data = convertCountersToIncreases(raw.values);
+            dataset.label = raw.name;
+            datasets.push(dataset);
+        }
+        return result;
+    };
+
+    // 60sec -> nanosec
+    const DENOMINATOR = 60 * 1000 * 1000 * 1000;
+    let generateCpuChartData = function (raws) {
+        let result = {
+            labels: convertTimeToLabel(raws[0].values).slice(1),
+            datasets: [],
+        };
+        let datasets = result.datasets;
+        for (let i = 0, length = raws.length; i < length; ++i) {
+            let raw = raws[i]
+            console.log(raw);
+            let dataset = Object.assign({}, colors[i]);
+            dataset.data = convertCountersToIncreases(raw.values).map(function (item) {
+                return item / DENOMINATOR;
+            });
             dataset.label = raw.name;
             datasets.push(dataset);
         }
@@ -154,27 +175,57 @@
         return result[1];
     };
 
+    let generateNetworkChart = function (raws, chartsElement) {
+        let chartData = generateNetworkChartData(raws);
+        console.log(chartData);
+
+        let chartElement = generateChartElement('network');
+        chartsElement.appendChild(chartElement);
+        let context = chartElement.querySelector('canvas.chart').getContext('2d');
+        let options = Object.assign({}, optionsTemplate);
+        options.scaleLabel = '<%=value%> bytes';
+        let chart = new Chart(context).Line(chartData, options);
+        chartElement.querySelector('ul.legend').innerHTML = chart.generateLegend();
+    };
+
+    let generateCpuChart = function (raws, chartsElement) {
+        let chartData = generateCpuChartData(raws);
+        console.log(chartData);
+
+        let chartElement = generateChartElement('cpu');
+        chartsElement.appendChild(chartElement);
+        let context = chartElement.querySelector('canvas.chart').getContext('2d');
+        let options = Object.assign({}, optionsTemplate);
+        options.scaleLabel = '<%=value%> %';
+        let chart = new Chart(context).Line(chartData, options);
+        chartElement.querySelector('ul.legend').innerHTML = chart.generateLegend();
+    };
+
     window.addEventListener('load', function () {
         let influxdbUrl = 'http://' + INFLUXDB + '/query?db=' + DB;
         let chartsElement = document.getElementById('charts');
-
         let id = getContainerId();
-        let dataUrl = influxdbUrl + "&q=SELECT value FROM rx_bytes,tx_bytes WHERE time > now() - 1h AND container = '" + id + "'";
-        console.log(dataUrl);
-        get(dataUrl).then(function (response) {
+
+        let networkUrl = influxdbUrl + "&q=SELECT value FROM rx_bytes,tx_bytes WHERE time > now() - 1h AND container = '" + id + "'";
+        get(networkUrl).then(function (response) {
             let raws = JSON.parse(response).results[0].series;
             console.log(raws);
 
-            let chartData = generateChartData(raws);
-            console.log(chartData);
-
-            let chartElement = generateChartElement(id);
-            chartsElement.appendChild(chartElement);
-            let context = chartElement.querySelector('canvas.chart').getContext('2d');
-            let chart = new Chart(context).Line(chartData, options);
-            chartElement.querySelector('ul.legend').innerHTML = chart.generateLegend();
+            generateNetworkChart(raws, chartsElement);
         }).catch(function (cause) {
             console.log(cause);
         });
+
+
+        let cpuUrl = influxdbUrl + "&q=SELECT value FROM cpu_total_usage WHERE time > now() - 1h AND container = '" + id + "'";
+        get(cpuUrl).then(function (response) {
+            let raws = JSON.parse(response).results[0].series;
+            console.log(raws);
+
+            generateCpuChart(raws, chartsElement);
+        }).catch(function (cause) {
+            console.log(cause);
+        });
+
     }, false);
 })();
