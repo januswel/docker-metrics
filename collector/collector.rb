@@ -47,6 +47,12 @@ class DockerDataCollector
         end
     end
 
+    def cpu_values(stats)
+        return {
+            'cpu_total_usage' => stats['cpu_stats']['cpu_usage']['total_usage']
+        }
+    end
+
     def collect(machine)
         connection = make_connection(machine)
         connection.start do |h|
@@ -57,7 +63,7 @@ class DockerDataCollector
                 stats = h.get('/containers/' + id + '/stats?stream=false');
                 result = JSON.parse(stats.body)
 
-                values = network_values(result)
+                values = network_values(result).merge(cpu_values(result))
                 insert(machine[0], id, values)
             end
         end
