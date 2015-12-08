@@ -6,7 +6,22 @@ collect and visualize docker metrics
 requirements
 ------------
 
+### EcmaScript 2015
+
 visualizer is written in EcmaScript 2015, so it run with only Google Chrome.
+
+### Docker configure
+
+your target machines must be configured to allow accessing by Docker remote API.
+in your setting files, "/etc/sysconfig/docker" in some env, add bellow line.
+
+```conf
+OPTIONS="-H 0.0.0.0:2376 -H unix:///var/run/docker.sock"
+```
+
+about this settings, see the public document.
+
+https://docs.docker.com/engine/articles/configuring/#configuring-the-docker-daemon-directly
 
 setup
 -----
