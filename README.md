@@ -21,7 +21,7 @@ OPTIONS="-H 0.0.0.0:2376 -H unix:///var/run/docker.sock"
 
 about this settings, see the public document.
 
-https://docs.docker.com/engine/articles/configuring/#configuring-the-docker-daemon-directly
+https://docs.docker.com/engine/userguide/basics/#bind-docker-to-another-host-port-or-a-unix-socket
 
 setup
 -----
