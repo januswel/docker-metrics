@@ -116,9 +116,3 @@ ln -s ../visualizer ./contents
 
 now, setup has all done.
 you can see charts in your machine's address with your web browser.
-
-
-demo
-----
-
-http://52.193.71.92/
